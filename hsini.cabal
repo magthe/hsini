@@ -17,8 +17,9 @@ flag Test
 
 library
     hs-source-dirs : src
-    build-depends : base, containers
-    exposed-modules : Data.Ini Data.Ini.Types
+    build-depends : base, containers, parsec >=2.1 && <2.2, monads-fd
+    exposed-modules : Data.Ini Data.Ini.Types Data.Ini.Reader
+    other-modules : Data.Ini.Reader.Internals
 
 Executable initest
     main-is        : IniTest.hs
