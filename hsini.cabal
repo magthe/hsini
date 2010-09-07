@@ -24,9 +24,9 @@ library
 Executable test
     main-is        : Main.hs
     hs-source-dirs : tst, src
-    other-modules : Ini
+    other-modules : Ini ReaderI
     if flag(Test)
-        build-depends  : HTF
+        build-depends  : HTF, HUnit
         buildable : True
         ghc-options    : -fhpc
     else
