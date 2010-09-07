@@ -1,9 +1,10 @@
-{-# LANGUAGE ExistentialQuantification #-}
-module Main where
+{-# OPTIONS_GHC -F -pgmF htfpp #-}
+
+module Ini where
 
 -- {{{1 imports
-import Test.SmallCheck
 import Data.Maybe
+import Test.Framework
 
 import Data.Ini
 import Data.Ini.Types
@@ -51,21 +52,3 @@ prop_optDelGet sn on ov cfglst = isNothing $ getOption sn on $ delOption sn on c
     where
         cfg = cfgFromList cfglst
         cfg2 = setOption sn on ov cfg
-    
--- {{{1 top-level functions
-data TB = forall a. Testable a => TB a
-
-allProps =
-    [ (3, TB prop_secAddDel)
-    , (3, TB prop_secAddHas)
-    , (3, TB prop_secAddGet)
-    , (3, TB prop_secDelGet)
-    , (2, TB prop_optSetDel)
-    , (2, TB prop_optSetHas)
-    , (2, TB prop_optSetGet)
-    , (2, TB prop_optDelGet)
-    ]
-
-main = mapM_ sC allProps
-    where
-        sC (i, TB f) = smallCheck i f
