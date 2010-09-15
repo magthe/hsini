@@ -1,10 +1,11 @@
-{-# OPTIONS_GHC -F -pgmF htfpp #-}
-
+{-# OPTIONS_GHC -XTemplateHaskell #-}
 module Ini where
 
 -- {{{1 imports
 import Data.Maybe
 import Test.Framework
+import Test.Framework.TH
+import Test.Framework.Providers.QuickCheck2
 
 import Data.Ini
 import Data.Ini.Types
@@ -52,3 +53,5 @@ prop_optDelGet sn on ov cfglst = isNothing $ getOption sn on $ delOption sn on c
     where
         cfg = cfgFromList cfglst
         cfg2 = setOption sn on ov cfg
+
+allTests = $(testGroupGenerator)

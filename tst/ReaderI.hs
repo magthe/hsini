@@ -1,8 +1,9 @@
-{-# OPTIONS_GHC -F -pgmF htfpp #-}
-
+{-# OPTIONS_GHC -XTemplateHaskell #-}
 module ReaderI where
 
 import Test.Framework
+import Test.Framework.Providers.HUnit
+import Test.Framework.TH
 import Test.HUnit.Base
 import Text.ParserCombinators.Parsec as P
 
@@ -17,71 +18,73 @@ p2E p s t = let
         Right e -> Right e
 
 -- {{{1 secParser
-test_secParserBasic = let
+case_secParserBasic = let
         expected = Right $ SectionL "foo"
         actual = p2E secParser "sec" "[foo]\n"
-    in assertEqual expected actual
+    in expected @=? actual
 
-test_secParserDropSpace = let
+case_secParserDropSpace = let
         expected = Right $ SectionL "foo"
         actual = p2E secParser "sec" "[ \tfoo\t ]\n"
-    in assertEqual expected actual
+    in expected @=? actual
 
-test_secParserDropTrailing = let
+case_secParserDropTrailing = let
         expected = Right $ SectionL "foo"
         actual = p2E secParser "sec" "[foo]  \t foobar\n"
-    in assertEqual expected actual
+    in expected @=? actual
 
 -- {{{1 optLineParser
-test_optLineParserBasic = let
+case_optLineParserBasic = let
         expected = Right $ OptionL "foo" "bar"
         actual = p2E optLineParser "optLine" "foo=bar\n"
-    in assertEqual expected actual
+    in expected @=? actual
 
-test_optLineParserDropSpace = let
+case_optLineParserDropSpace = let
         expected = Right $ OptionL "foo" "bar"
         actual = p2E optLineParser "optLine" "foo\t \t=\t \t bar\n"
-    in assertEqual expected actual
+    in expected @=? actual
 
-test_optLineParserKeepSpace = let
+case_optLineParserKeepSpace = let
         expected = Right $ OptionL "foo" "bar \t \t"
         actual = p2E optLineParser "optLine" "foo\t \t=\t \t bar \t \t\n"
-    in assertEqual expected actual
+    in expected @=? actual
 
 -- {{{1 optContParser
-test_optContParserSpace = let
+case_optContParserSpace = let
         expected = Right $ OptionContL "foo"
         actual = p2E optContParser "optCont" " foo\n"
-    in assertEqual expected actual
+    in expected @=? actual
 
-test_optContParserTab = let
+case_optContParserTab = let
         expected = Right $OptionContL "foo"
         actual = p2E optContParser "optCont" "\tfoo\n"
-    in assertEqual expected actual
+    in expected @=? actual
 
-test_optContParserKeepTrailing = let
+case_optContParserKeepTrailing = let
         expected = Right $ OptionContL "foo  \t\t"
         actual = p2E optContParser "optCont" "\tfoo  \t\t\n"
-    in assertEqual expected actual
+    in expected @=? actual
 
 -- {{{1 noiseParser
-test_noiseParserEmptyLine = let
+case_noiseParserEmptyLine = let
         expected = Right CommentL
         actual = p2E noiseParser "noise" "\n"
-    in assertEqual expected actual
+    in expected @=? actual
 
-test_noiseParserComment = let
+case_noiseParserComment = let
         expected = Right CommentL
         actual = p2E noiseParser "noise" "# a comment\n"
-    in assertEqual expected actual
+    in expected @=? actual
 
-test_noiseParserNonEmpty = let
+case_noiseParserNonEmpty = let
         expected = Left "bad"
         actual = p2E noiseParser "noise" " \n"
-    in assertEqual expected actual
+    in expected @=? actual
 
 -- {{{1 iniParser
 -- TBD
 
 -- {{{1 buildConfig
 -- TBD
+
+allTests = $(testGroupGenerator)
