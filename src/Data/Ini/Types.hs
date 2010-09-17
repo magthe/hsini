@@ -14,3 +14,5 @@ type OptionValue = String
 cfgFromList :: [(SectionName, [(OptionName, OptionValue)])] -> Config
 cfgFromList = M.fromList . map (\ (sn, ol) -> (sn, M.fromList ol))
 
+cfgToList :: Config -> [(SectionName, [(OptionName, OptionValue)])]
+cfgToList = M.toList . M.map M.toList

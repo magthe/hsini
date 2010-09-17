@@ -1,8 +1,12 @@
 -- | Parser for configurations.
-module Data.Ini.Reader where
+module Data.Ini.Reader
+    ( parse
+    , IniReaderError(..)
+    , IniParseResult
+    ) where
 
 import Control.Monad.Error
-import Text.ParserCombinators.Parsec as P
+import qualified Text.ParserCombinators.Parsec as P
 
 import Data.Ini.Types
 import Data.Ini.Reader.Internals

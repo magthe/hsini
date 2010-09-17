@@ -66,3 +66,7 @@ delOption sn on cfg = let
     in if sEmptyAfterDelete
         then M.delete sn cfg
         else maybe cfg (\ sec -> M.insert sn (M.delete on sec) cfg) s
+
+-- | Returns all options and their values of a section.
+allItems :: SectionName -> Config -> [(OptionName, OptionValue)]
+allItems sn cfg = maybe [] M.toList (getSection sn cfg)

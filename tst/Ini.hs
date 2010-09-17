@@ -2,10 +2,12 @@
 module Ini where
 
 -- {{{1 imports
+import Data.List
 import Data.Maybe
 import Test.Framework
 import Test.Framework.TH
 import Test.Framework.Providers.QuickCheck2
+import Test.QuickCheck
 
 import Data.Ini
 import Data.Ini.Types
@@ -54,4 +56,14 @@ prop_optDelGet sn on ov cfglst = isNothing $ getOption sn on $ delOption sn on c
         cfg = cfgFromList cfglst
         cfg2 = setOption sn on ov cfg
 
+-- getting all items
+prop_optAllItems cfglst = (length _cfglst > 0) ==> lstItems == (allItems sn cfg)
+    where
+        cfg = cfgFromList cfglst
+        _cfglst = cfgToList cfg
+        -- sn = head . sort $ map fst _cfglst
+        sn = head $ map fst _cfglst
+        lstItems = fromJust $ lookup sn _cfglst
+
+-- {{{1 allTests
 allTests = $(testGroupGenerator)
