@@ -17,7 +17,8 @@ flag Test
 
 library
     hs-source-dirs : src
-    build-depends : base, containers, parsec ==2.1.*, monads-fd
+    build-depends : base, containers, parsec ==3.1.*, mtl ==2.0.*,
+        bytestring ==0.9.*
     exposed-modules : Data.Ini Data.Ini.Types Data.Ini.Reader
     other-modules : Data.Ini.Reader.Internals
 

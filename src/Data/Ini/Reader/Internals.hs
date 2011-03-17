@@ -3,7 +3,10 @@ module Data.Ini.Reader.Internals where
 
 import Control.Monad.Error
 import Control.Monad.State
-import Text.ParserCombinators.Parsec as P
+-- import Text.ParserCombinators.Parsec as P
+import Text.Parsec as P
+import Text.Parsec.String
+import qualified Data.ByteString as BS
 
 import Data.Ini
 import Data.Ini.Types
@@ -55,11 +58,13 @@ buildConfig ifs = let
     in mergeOptions fIfs >>= (\ is -> return . fst $ runState (buildit emptyConfig is) "default")
 
 -- | Consumer of whitespace "@ \t@".
+eatWhiteSpace :: Parser String
 eatWhiteSpace = many $ oneOf " \t"
 
 -- | Parser for the start-of-section line.  It expects the line to start with a
 -- @[@ then find the section name, and finally a @]@.  The section name may be
 -- surrounded by any number of white space characters (see 'eatWhiteSpace').
+secParser :: Parser IniFile
 secParser = let
         validSecNameChrs = ['a'..'z'] ++ ['A'..'Z'] ++ "-/@"
     in do
@@ -75,6 +80,7 @@ secParser = let
 -- name, then a @=@ must be found, and finally the rest of the line is taken as
 -- the option value.  The equal sign may be surrounded by any number of white
 -- space characters (see 'eatWhiteSpace').
+optLineParser :: Parser IniFile
 optLineParser = let
         validOptNameChrs = ['a'..'z'] ++ ['A'..'Z'] ++ "-/@"
     in do
@@ -89,6 +95,7 @@ optLineParser = let
 -- either a space or a tab character ("@ \t@").  Everything else on the line,
 -- until the newline character, is taken as the continuation of an option
 -- value.
+optContParser :: Parser IniFile
 optContParser = do
     oneOf " \t"
     eatWhiteSpace
@@ -99,6 +106,7 @@ optContParser = do
 -- | Parser for "noise" in the configuration file, such as comments and empty
 -- lines.  (Note that lines containing only space characters will be
 -- successfully parsed by 'optContParser'.)
+noiseParser :: Parser IniFile
 noiseParser = let
         commentP = do
             char '#'
@@ -106,6 +114,7 @@ noiseParser = let
         emptyL = newline >> return ""
     in choice [commentP, emptyL] >> return CommentL
 
+iniParser :: Parser [IniFile]
 iniParser = do
     many noiseParser
     s1 <- secParser
