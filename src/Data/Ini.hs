@@ -1,4 +1,9 @@
--- | A representation of configuration options.  It consists of /sections/,
+-- |
+-- Module    : Data.Ini
+-- Copyright : 2011 Magnus Therning
+-- License   : BSD3
+--
+-- A representation of configuration options.  It consists of /sections/,
 -- each which can contain 0 or more /options/.  Each options is a /key/,
 -- /value/ pair.
 --

@@ -1,4 +1,9 @@
--- | Parser for configurations.
+-- |
+-- Module    : Data.Ini.Reader
+-- Copyright : 2011 Magnus Therning
+-- License   : BSD3
+--
+-- Parser for configurations.
 module Data.Ini.Reader
     ( parse
     , IniReaderError(..)

@@ -1,4 +1,6 @@
 {-# OPTIONS_GHC -XTemplateHaskell #-}
+-- Copyright : 2011 Magnus Therning
+-- License   : BSD3
 module Ini where
 
 -- {{{1 imports

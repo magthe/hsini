@@ -1,13 +1,13 @@
 name          : hsini
-version       : 0.0.0
+version       : 0.0.999
 license       : BSD3
-license-file  : COPYING
+license-file  : LICENSE
 author        : Magnus Therning
 maintainer    : magnus@therning.org
 copyright     : Magnus Therning, 2010
 synopsis      : Package for user configuration files (INI)
 description   : None yet
-build-type    : Simple
+build-type    : Custom
 category      : Network
 cabal-version : >= 1.6
 
@@ -17,18 +17,31 @@ flag Test
 
 library
     hs-source-dirs : src
-    build-depends : base, containers, parsec ==3.1.*, mtl ==2.0.*,
-        bytestring ==0.9.*
-    exposed-modules : Data.Ini Data.Ini.Types Data.Ini.Reader
-    other-modules : Data.Ini.Reader.Internals
+    build-depends :
+        base ==4.3.*,
+        bytestring ==0.9.*,
+        containers ==0.4.*,
+        mtl ==2.0.*,
+        parsec ==3.1.*
+    exposed-modules :
+        Data.Ini
+        Data.Ini.Types
+        Data.Ini.Reader
+    other-modules :
+        Data.Ini.Reader.Internals
 
-Executable test
+executable tests
     main-is : Main.hs
     hs-source-dirs : tst, src
     other-modules : Ini ReaderI
     if flag(Test)
-        build-depends : HUnit, test-framework, test-framework-hunit,
-            test-framework-quickcheck2, test-framework-th, QuickCheck
+        build-depends :
+            HUnit,
+            test-framework,
+            test-framework-hunit,
+            test-framework-quickcheck2,
+            test-framework-th,
+            QuickCheck
         buildable : True
         ghc-options : -fhpc
     else

@@ -1,4 +1,9 @@
--- | Internal functions used in 'Data.Ini.Reader'.
+-- |
+-- Module    : Data.Ini.Reader.Internals
+-- Copyright : 2011 Magnus Therning
+-- License   : BSD3
+--
+-- Internal functions used in 'Data.Ini.Reader'.
 module Data.Ini.Reader.Internals where
 
 import Control.Monad.Error

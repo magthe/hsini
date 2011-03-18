@@ -1,3 +1,5 @@
+-- Copyright : 2011 Magnus Therning
+-- License   : BSD3
 module Main where
 
 import Test.Framework

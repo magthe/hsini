@@ -1,3 +1,7 @@
+-- |
+-- Module    : Data.Ini.Types
+-- Copyright : 2011 Magnus Therning
+-- License   : BSD3
 module Data.Ini.Types where
 
 import qualified Data.Map as M
