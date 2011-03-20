@@ -62,7 +62,7 @@ buildConfig ifs = let
 
     in mergeOptions fIfs >>= (\ is -> return . fst $ runState (buildit emptyConfig is) "default")
 
--- | Consumer of whitespace "@ \t@".
+-- | Consumer of whitespace \"@ \t@\".
 eatWhiteSpace :: Parser String
 eatWhiteSpace = many $ oneOf " \t"
 
@@ -97,7 +97,7 @@ optLineParser = let
         return $ OptionL on ov
 
 -- | Parser for an option-value continuation line.  The line must start with
--- either a space or a tab character ("@ \t@").  Everything else on the line,
+-- either a space or a tab character (\"@ \t@\").  Everything else on the line,
 -- until the newline character, is taken as the continuation of an option
 -- value.
 optContParser :: Parser IniFile
