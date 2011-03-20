@@ -1,5 +1,5 @@
 name          : hsini
-version       : 0.0.999
+version       : 0.1
 license       : BSD3
 license-file  : LICENSE
 author        : Magnus Therning
@@ -11,38 +11,32 @@ build-type    : Custom
 category      : Network
 cabal-version : >= 1.6
 
+source-repository head
+    type     : git
+    location : https : //github.com/magthe/hsini.git
+
+source-repository this
+    type     : git
+    location : https   : //github.com/magthe/hsini.git
+    tag      : REL_0.1
+
 flag Test
     description : Enable building of tests
     default     : False
 
 library
-    hs-source-dirs : src
-    build-depends :
-        base ==4.3.*,
-        bytestring ==0.9.*,
-        containers ==0.4.*,
-        mtl ==2.0.*,
-        parsec ==3.1.*
-    exposed-modules :
-        Data.Ini
-        Data.Ini.Types
-        Data.Ini.Reader
-    other-modules :
-        Data.Ini.Reader.Internals
+    hs-source-dirs  : src
+    build-depends   : base ==4.3.*, bytestring ==0.9.*, containers ==0.4.*, mtl ==2.0.*, parsec ==3.1.*
+    exposed-modules : Data.Ini Data.Ini.Types Data.Ini.Reader
+    other-modules   : Data.Ini.Reader.Internals
 
 executable tests
-    main-is : Main.hs
+    main-is        : Main.hs
     hs-source-dirs : tst, src
-    other-modules : Ini ReaderI
+    other-modules  : Ini ReaderI
     if flag(Test)
-        build-depends :
-            HUnit,
-            test-framework,
-            test-framework-hunit,
-            test-framework-quickcheck2,
-            test-framework-th,
-            QuickCheck
-        buildable : True
-        ghc-options : -fhpc
+        build-depends : HUnit, test-framework, test-framework-hunit, test-framework-quickcheck2, test-framework-th, QuickCheck
+        buildable     : True
+        ghc-options   : -fhpc
     else
-        buildable : False
+        buildable     : False
