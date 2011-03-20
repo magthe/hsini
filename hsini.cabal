@@ -1,5 +1,5 @@
 name          : hsini
-version       : 0.1
+version       : 0.1.999
 license       : BSD3
 license-file  : LICENSE
 author        : Magnus Therning
@@ -14,11 +14,6 @@ cabal-version : >= 1.6
 source-repository head
     type     : git
     location : https : //github.com/magthe/hsini.git
-
-source-repository this
-    type     : git
-    location : https   : //github.com/magthe/hsini.git
-    tag      : REL_0.1
 
 flag Test
     description : Enable building of tests
