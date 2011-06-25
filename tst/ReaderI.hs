@@ -20,9 +20,29 @@ p2E p s t = let
         Right e -> Right e
 
 -- {{{1 secParser
-case_secParserBasic = let
+case_secParserAllowedChars1 = let
         expected = Right $ SectionL "foo"
         actual = p2E secParser "sec" "[foo]\n"
+    in expected @=? actual
+
+case_secParserAllowedChars2 = let
+        expected = Right $ SectionL "FooBar"
+        actual = p2E secParser "sec" "[FooBar]\n"
+    in expected @=? actual
+
+case_secParserAllowedChars3 = let
+        expected = Right $ SectionL "@Foo/Bar-"
+        actual = p2E secParser "sec" "[@Foo/Bar-]\n"
+    in expected @=? actual
+
+case_secParserDisallowedChars1 = let
+        expected = Left "bad"
+        actual = p2E secParser "sec" "[_foo]\n"
+    in expected @=? actual
+
+case_secParserDisallowedChars2 = let
+        expected = Left "bad"
+        actual = p2E secParser "sec" "[foo123]\n"
     in expected @=? actual
 
 case_secParserDropSpace = let
