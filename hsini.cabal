@@ -13,7 +13,7 @@ cabal-version : >= 1.6
 
 source-repository head
     type     : git
-    location : https : //github.com/magthe/hsini.git
+    location : https://github.com/magthe/hsini.git
 
 flag Test
     description : Enable building of tests
