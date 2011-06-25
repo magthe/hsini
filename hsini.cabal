@@ -9,6 +9,7 @@ synopsis      : Package for user configuration files (INI)
 description   : None yet
 build-type    : Custom
 category      : Network
+homepage      : https://github.com/magthe/hsini
 cabal-version : >= 1.6
 
 source-repository head
