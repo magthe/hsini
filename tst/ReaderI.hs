@@ -35,14 +35,14 @@ case_secParserAllowedChars3 = let
         actual = p2E secParser "sec" "[@Foo/Bar-]\n"
     in expected @=? actual
 
+case_secParserAllowedChars4 = let
+        expected = Right $ SectionL "foo123"
+        actual = p2E secParser "sec" "[foo123]\n"
+    in expected @=? actual
+
 case_secParserDisallowedChars1 = let
         expected = Left "bad"
         actual = p2E secParser "sec" "[_foo]\n"
-    in expected @=? actual
-
-case_secParserDisallowedChars2 = let
-        expected = Left "bad"
-        actual = p2E secParser "sec" "[foo123]\n"
     in expected @=? actual
 
 case_secParserDropSpace = let
