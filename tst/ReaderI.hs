@@ -42,7 +42,7 @@ case_secParserAllowedChars4 = let
 
 case_secParserDisallowedChars1 = let
         expected = Left "bad"
-        actual = p2E secParser "sec" "[_foo]\n"
+        actual = p2E secParser "sec" "[$foo]\n"
     in expected @=? actual
 
 case_secParserDropSpace = let
