@@ -4,6 +4,7 @@
 -- License   : BSD3
 module Data.Ini.Types where
 
+import Control.Arrow        (second)
 import qualified Data.Map as M
 
 type Config = M.Map SectionName Section
@@ -16,7 +17,7 @@ type OptionValue = String
 
 -- useful since Map doesn't have any Serial instance
 cfgFromList :: [(SectionName, [(OptionName, OptionValue)])] -> Config
-cfgFromList = M.fromList . map (\ (sn, ol) -> (sn, M.fromList ol))
+cfgFromList = M.fromList . map (second M.fromList)
 
 cfgToList :: Config -> [(SectionName, [(OptionName, OptionValue)])]
 cfgToList = M.toList . M.map M.toList

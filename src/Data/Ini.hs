@@ -50,7 +50,7 @@ getOption sn on cfg = M.lookup on =<< getSection sn cfg
 
 -- | Returns a list of all options in the section.
 options ::  SectionName -> Config -> [OptionName]
-options sn cfg = maybe [] (M.keys) (getSection sn cfg)
+options sn cfg = maybe [] M.keys (getSection sn cfg)
 
 -- | Sets the value of the option, adding it if it doesn't exist.
 setOption :: SectionName -> OptionName -> OptionValue -> Config -> Config
