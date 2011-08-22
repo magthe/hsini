@@ -32,6 +32,6 @@ executable tests
     if flag(Test)
         build-depends : HUnit, test-framework, test-framework-hunit, test-framework-quickcheck2, test-framework-th, QuickCheck
         buildable     : True
-        ghc-options   : -fhpc
+        -- ghc-options   : -fhpc
     else
         buildable     : False
