@@ -41,7 +41,7 @@ case_secParserAllowedChars4 = let
     in expected @=? actual
 
 case_secParserDisallowedChars1 = let
-        expected = Left "bad"
+        expected = Right $ SectionL "_foo"
         actual = p2E secParser "sec" "[_foo]\n"
     in expected @=? actual
 
