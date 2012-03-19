@@ -82,8 +82,8 @@ case_optLineParserDisallowedChars1 = let
     in expected @=? actual
 
 case_optLineParserDisallowedChars2 = let
-        expected = Left "bad"
-        actual = p2E optLineParser "optLine" "foo666=bar\n"
+        expected = Right $ OptionL "foo1234567890" "bar"
+        actual = p2E optLineParser "optLine" "foo1234567890=bar\n"
     in expected @=? actual
 
 case_optLineParserDisallowedChars3 = let
