@@ -123,9 +123,14 @@ case_noiseParserEmptyLine = let
         actual = p2E noiseParser "noise" "\n"
     in expected @=? actual
 
-case_noiseParserComment = let
+case_noiseParserComment1 = let
         expected = Right CommentL
         actual = p2E noiseParser "noise" "# a comment\n"
+    in expected @=? actual
+
+case_noiseParserComment2 = let
+        expected = Right CommentL
+        actual = p2E noiseParser "noise" "; another comment\n"
     in expected @=? actual
 
 case_noiseParserNonEmpty = let

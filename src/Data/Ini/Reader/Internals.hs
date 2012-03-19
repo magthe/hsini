@@ -114,7 +114,7 @@ optContParser = do
 noiseParser :: Parser IniFile
 noiseParser = let
         commentP = do
-            char '#'
+            oneOf "#;"
             manyTill anyChar newline
         emptyL = newline >> return ""
     in choice [commentP, emptyL] >> return CommentL
