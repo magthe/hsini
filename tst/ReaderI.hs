@@ -31,8 +31,8 @@ case_secParserAllowedChars2 = let
     in expected @=? actual
 
 case_secParserAllowedChars3 = let
-        expected = Right $ SectionL "@Foo/Bar-"
-        actual = p2E secParser "sec" "[@Foo/Bar-]\n"
+        expected = Right $ SectionL "@Foo/_Bar-"
+        actual = p2E secParser "sec" "[@Foo/_Bar-]\n"
     in expected @=? actual
 
 case_secParserAllowedChars4 = let
@@ -41,8 +41,8 @@ case_secParserAllowedChars4 = let
     in expected @=? actual
 
 case_secParserDisallowedChars1 = let
-        expected = Right $ SectionL "_foo"
-        actual = p2E secParser "sec" "[_foo]\n"
+        expected = Left "bad"
+        actual = p2E secParser "sec" "[$foo]\n"
     in expected @=? actual
 
 case_secParserDisallowedChars2 = let
@@ -72,21 +72,21 @@ case_optLineParserAllowedChars2 = let
     in expected @=? actual
 
 case_optLineParserAllowedChars3 = let
-        expected = Right $ OptionL "foo@/foo-" "bar"
-        actual = p2E optLineParser "optLine" "foo@/foo-=bar\n"
+        expected = Right $ OptionL "foo@/_foo-" "bar"
+        actual = p2E optLineParser "optLine" "foo@/_foo-=bar\n"
     in expected @=? actual
 
-case_optLineParserDisallowedChars1 = let
-        expected = Right $ OptionL "foo_" "bar"
-        actual = p2E optLineParser "optLine" "foo_=bar\n"
-    in expected @=? actual
-
-case_optLineParserDisallowedChars2 = let
+case_optLineParserAllowedChars4 = let
         expected = Right $ OptionL "foo1234567890" "bar"
         actual = p2E optLineParser "optLine" "foo1234567890=bar\n"
     in expected @=? actual
 
-case_optLineParserDisallowedChars3 = let
+case_optLineParserDisallowedChars1 = let
+        expected = Left "bad"
+        actual = p2E optLineParser "optLine" "foo$=bar\n"
+    in expected @=? actual
+
+case_optLineParserDisallowedChars2 = let
         expected = Left "bad"
         actual = p2E optLineParser "optLine" "foo.bar=baz\n"
     in expected @=? actual
