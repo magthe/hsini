@@ -31,8 +31,8 @@ case_secParserAllowedChars2 = let
     in expected @=? actual
 
 case_secParserAllowedChars3 = let
-        expected = Right $ SectionL "@Foo/Bar-"
-        actual = p2E secParser "sec" "[@Foo/Bar-]\n"
+        expected = Right $ SectionL "@Foo/_Bar-"
+        actual = p2E secParser "sec" "[@Foo/_Bar-]\n"
     in expected @=? actual
 
 case_secParserAllowedChars4 = let
@@ -42,7 +42,7 @@ case_secParserAllowedChars4 = let
 
 case_secParserDisallowedChars1 = let
         expected = Left "bad"
-        actual = p2E secParser "sec" "[_foo]\n"
+        actual = p2E secParser "sec" "[$foo]\n"
     in expected @=? actual
 
 case_secParserDisallowedChars2 = let
@@ -72,21 +72,21 @@ case_optLineParserAllowedChars2 = let
     in expected @=? actual
 
 case_optLineParserAllowedChars3 = let
-        expected = Right $ OptionL "foo@/foo-" "bar"
-        actual = p2E optLineParser "optLine" "foo@/foo-=bar\n"
+        expected = Right $ OptionL "foo@/_foo-" "bar"
+        actual = p2E optLineParser "optLine" "foo@/_foo-=bar\n"
+    in expected @=? actual
+
+case_optLineParserAllowedChars4 = let
+        expected = Right $ OptionL "foo1234567890" "bar"
+        actual = p2E optLineParser "optLine" "foo1234567890=bar\n"
     in expected @=? actual
 
 case_optLineParserDisallowedChars1 = let
         expected = Left "bad"
-        actual = p2E optLineParser "optLine" "foo_=bar\n"
+        actual = p2E optLineParser "optLine" "foo$=bar\n"
     in expected @=? actual
 
 case_optLineParserDisallowedChars2 = let
-        expected = Left "bad"
-        actual = p2E optLineParser "optLine" "foo666=bar\n"
-    in expected @=? actual
-
-case_optLineParserDisallowedChars3 = let
         expected = Left "bad"
         actual = p2E optLineParser "optLine" "foo.bar=baz\n"
     in expected @=? actual
@@ -123,9 +123,14 @@ case_noiseParserEmptyLine = let
         actual = p2E noiseParser "noise" "\n"
     in expected @=? actual
 
-case_noiseParserComment = let
+case_noiseParserComment1 = let
         expected = Right CommentL
         actual = p2E noiseParser "noise" "# a comment\n"
+    in expected @=? actual
+
+case_noiseParserComment2 = let
+        expected = Right CommentL
+        actual = p2E noiseParser "noise" "; another comment\n"
     in expected @=? actual
 
 case_noiseParserNonEmpty = let
