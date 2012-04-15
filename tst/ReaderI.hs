@@ -40,12 +40,12 @@ case_secParserAllowedChars4 = let
         actual = p2E secParser "sec" "[foo123]\n"
     in expected @=? actual
 
-case_secParserDisallowedChars1 = let
-        expected = Left "bad"
+case_secParserAllowedChars5 = let
+        expected = Right $ SectionL "_foo"
         actual = p2E secParser "sec" "[_foo]\n"
     in expected @=? actual
 
-case_secParserDisallowedChars2 = let
+case_secParserDisallowedChars1 = let
         expected = Left "bad"
         actual = p2E secParser "sec" "[foo.bar]\n"
     in expected @=? actual
@@ -81,12 +81,12 @@ case_optLineParserAllowedChars4 = let
         actual = p2E optLineParser "optLine" "foo123=bar\n"
     in expected @=? actual
 
-case_optLineParserDisallowedChars1 = let
-        expected = Left "bad"
-        actual = p2E optLineParser "optLine" "foo_=bar\n"
+case_optLineParserAllowedChars5 = let
+        expected = Right $ OptionL "_foo" "bar"
+        actual = p2E optLineParser "optLine" "_foo=bar\n"
     in expected @=? actual
 
-case_optLineParserDisallowedChars3 = let
+case_optLineParserDisallowedChars1 = let
         expected = Left "bad"
         actual = p2E optLineParser "optLine" "foo.bar=baz\n"
     in expected @=? actual

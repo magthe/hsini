@@ -71,7 +71,7 @@ eatWhiteSpace = many $ oneOf " \t"
 -- surrounded by any number of white space characters (see 'eatWhiteSpace').
 secParser :: Parser IniFile
 secParser = let
-        validSecNameChrs = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "-/@"
+        validSecNameChrs = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "_-/@"
     in do
         char '['
         eatWhiteSpace
@@ -87,7 +87,7 @@ secParser = let
 -- space characters (see 'eatWhiteSpace').
 optLineParser :: Parser IniFile
 optLineParser = let
-        validOptNameChrs = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "-/@"
+        validOptNameChrs = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "_-/@"
     in do
         on <- many1 $ oneOf validOptNameChrs
         eatWhiteSpace
