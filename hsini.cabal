@@ -21,7 +21,7 @@ flag Test
 
 library
     hs-source-dirs  : src
-    build-depends   : base ==4.3.*, bytestring ==0.9.*, containers ==0.4.*, mtl ==2.0.*, parsec ==3.1.*
+    build-depends   : base >=4.3 && < 4.6, bytestring ==0.9.*, containers ==0.4.*, mtl ==2.0.*, parsec ==3.1.*
     exposed-modules : Data.Ini Data.Ini.Types Data.Ini.Reader
     other-modules   : Data.Ini.Reader.Internals
 
