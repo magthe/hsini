@@ -12,6 +12,7 @@ import System.Cmd
 import Control.Monad
 import System.FilePath
 import System.Directory
+import System.IO.Error
 
 main = defaultMainWithHooks $ simpleUserHooks
     { cleanHook = profileClean
@@ -19,7 +20,7 @@ main = defaultMainWithHooks $ simpleUserHooks
     }
 
 profileClean pd v uh cf = let
-        _matchFileGlob g = catch (matchFileGlob g) (\ _ -> return [])
+        _matchFileGlob g = catchIOError (matchFileGlob g) (\ _ -> return [])
     in do
         (cleanHook simpleUserHooks) pd v uh cf
         tixFiles <- _matchFileGlob "*.tix"
