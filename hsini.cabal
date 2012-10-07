@@ -1,5 +1,5 @@
 name          : hsini
-version       : 0.1.999
+version       : 0.1.1
 license       : BSD3
 license-file  : LICENSE
 author        : Magnus Therning
@@ -21,8 +21,8 @@ flag Test
 
 library
     hs-source-dirs  : src
-    build-depends   : base >=4.2 && < 4.6, bytestring ==0.9.*,
-        containers >=0.3 && < 0.5, mtl ==2.0.*, parsec ==3.1.*
+    build-depends   : base >=4.2 && < 4.6, bytestring >=0.9,
+        containers >=0.3 && < 0.5, mtl >=2.0, parsec >=3.1
     exposed-modules : Data.Ini Data.Ini.Types Data.Ini.Reader
     other-modules   : Data.Ini.Reader.Internals
 
