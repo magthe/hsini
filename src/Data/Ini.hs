@@ -42,19 +42,15 @@ delSection = M.delete
 -- {{{1 options
 -- | Returns @True@ if the names section has the option.
 hasOption :: SectionName -> OptionName -> Config -> Bool
-hasOption sn on cfg = isJust $ do
-    s <- getSection sn cfg
-    M.lookup on s
+hasOption sn on cfg = isJust $ getSection sn cfg >>= M.lookup on
 
 -- | Returns the value of the option, if it exists.
 getOption :: SectionName -> OptionName -> Config -> Maybe OptionValue
-getOption sn on cfg = do
-    s <- getSection sn cfg
-    M.lookup on s
+getOption sn on cfg = getSection sn cfg >>= M.lookup on
 
 -- | Returns a list of all options in the section.
 options ::  SectionName -> Config -> [OptionName]
-options sn cfg = maybe [] (M.keys) (getSection sn cfg)
+options sn cfg = maybe [] M.keys (getSection sn cfg)
 
 -- | Sets the value of the option, adding it if it doesn't exist.
 setOption :: SectionName -> OptionName -> OptionValue -> Config -> Config
