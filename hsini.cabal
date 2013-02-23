@@ -9,30 +9,34 @@ synopsis      : Package for user configuration files (INI)
 description   : None yet
 build-type    : Custom
 category      : Network
-cabal-version : >= 1.6
+cabal-version : >= 1.10
 
 source-repository head
     type     : git
     location : https://github.com/magthe/hsini.git
 
-flag Test
-    description : Enable building of tests
-    default     : False
-
 library
     hs-source-dirs  : src
+    default-language : Haskell2010
     build-depends   : base >=4.2 && <4.7, bytestring >=0.9 && <0.11,
         containers >=0.3 && <0.6, mtl >=2.0 && <2.2, parsec ==3.1.*
     exposed-modules : Data.Ini Data.Ini.Types Data.Ini.Reader
     other-modules   : Data.Ini.Reader.Internals
 
-executable tests
-    main-is        : Main.hs
-    hs-source-dirs : tst, src
-    other-modules  : Ini ReaderI
-    if flag(Test)
-        build-depends : HUnit, test-framework, test-framework-hunit, test-framework-quickcheck2, test-framework-th, QuickCheck
-        buildable     : True
-        -- ghc-options   : -fhpc
-    else
-        buildable     : False
+test-suite hsini-tests
+    type: exitcode-stdio-1.0
+    hs-source-dirs: tst, src
+    main-is: Main.hs
+    default-language : Haskell2010
+    build-depends:
+        base,
+        containers,
+        bytestring,
+        parsec,
+        mtl,
+        HUnit,
+        test-framework,
+        test-framework-hunit,
+        test-framework-quickcheck2,
+        test-framework-th,
+        QuickCheck
