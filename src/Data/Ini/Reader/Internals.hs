@@ -9,9 +9,9 @@ module Data.Ini.Reader.Internals where
 import Control.Monad.Error
 import Control.Monad.State
 -- import Text.ParserCombinators.Parsec as P
+import qualified Data.ByteString as BS
 import Text.Parsec as P
 import Text.Parsec.String
-import qualified Data.ByteString as BS
 
 import Data.Ini
 import Data.Ini.Types
@@ -120,8 +120,5 @@ noiseParser = let
     in choice [commentP, emptyL] >> return CommentL
 
 iniParser :: Parser [IniFile]
-iniParser = do
-    many noiseParser
-    s1 <- secParser
-    r <- many $ choice [secParser, optLineParser, optContParser, noiseParser]
-    return (s1:r)
+iniParser =
+    many $ choice [secParser, optLineParser, optContParser, noiseParser]
