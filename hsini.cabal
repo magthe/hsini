@@ -1,10 +1,10 @@
 name          : hsini
-version       : 0.2
+version       : 0.3
 license       : BSD3
 license-file  : LICENSE
 author        : Magnus Therning
 maintainer    : magnus@therning.org
-copyright     : Magnus Therning, 2010
+copyright     : Magnus Therning, 2010-2014
 synopsis      : Package for user configuration files (INI)
 description   : None yet
 build-type    : Custom
