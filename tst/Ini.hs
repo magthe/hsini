@@ -1,15 +1,15 @@
 {-# OPTIONS_GHC -XTemplateHaskell #-}
--- Copyright : 2011 Magnus Therning
+-- Copyright : 2011-2014 Magnus Therning
 -- License   : BSD3
-module Ini where
+module Ini
+    ( allTests
+    ) where
 
 -- {{{1 imports
-import Data.List
 import Data.Maybe
-import Test.Framework
-import Test.Framework.TH
-import Test.Framework.Providers.QuickCheck2
-import Test.QuickCheck
+import Test.Tasty
+import Test.Tasty.QuickCheck
+import Test.Tasty.TH
 
 import Data.Ini
 import Data.Ini.Types
@@ -68,4 +68,5 @@ prop_optAllItems cfglst = (length _cfglst > 0) ==> lstItems == (allItems sn cfg)
         lstItems = fromJust $ lookup sn _cfglst
 
 -- {{{1 allTests
+allTests :: TestTree
 allTests = $(testGroupGenerator)

@@ -36,8 +36,8 @@ test-suite hsini-tests
         parsec,
         mtl,
         HUnit,
-        test-framework,
-        test-framework-hunit,
-        test-framework-quickcheck2,
-        test-framework-th,
+        tasty,
+        tasty-hunit,
+        tasty-quickcheck,
+        tasty-th,
         QuickCheck

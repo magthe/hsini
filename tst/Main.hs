@@ -1,13 +1,14 @@
--- Copyright : 2011 Magnus Therning
+-- Copyright : 2011-2014 Magnus Therning
 -- License   : BSD3
 module Main where
 
-import Test.Framework
+import Test.Tasty
 
 import qualified Ini as I
 import qualified ReaderI as RI
 
-main = defaultMain
-    [ I.allTests
-    , RI.allTests
-    ]
+main :: IO ()
+main = defaultMain allTests
+
+allTests :: TestTree
+allTests = testGroup "All tests" [I.allTests, RI.allTests]

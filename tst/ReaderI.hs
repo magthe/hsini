@@ -1,12 +1,14 @@
 {-# OPTIONS_GHC -XTemplateHaskell #-}
--- Copyright : 2011 Magnus Therning
+-- Copyright : 2011-2014 Magnus Therning
 -- License   : BSD3
-module ReaderI where
+module ReaderI
+    (allTests
+    ) where
 
-import Test.Framework
-import Test.Framework.Providers.HUnit
-import Test.Framework.TH
 import Test.HUnit.Base
+import Test.Tasty
+import Test.Tasty.HUnit
+import Test.Tasty.TH
 import Text.ParserCombinators.Parsec as P
 
 import Data.Ini.Reader.Internals
@@ -144,4 +146,5 @@ case_noiseParserNonEmpty = let
 -- {{{1 buildConfig
 -- TBD
 
+allTests :: TestTree
 allTests = $(testGroupGenerator)
