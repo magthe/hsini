@@ -1,6 +1,6 @@
 -- |
 -- Module    : Data.Ini
--- Copyright : 2011 Magnus Therning
+-- Copyright : 2011-2014 Magnus Therning
 -- License   : BSD3
 --
 -- A representation of configuration options.  It consists of /sections/,

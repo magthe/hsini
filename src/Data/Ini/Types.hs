@@ -1,6 +1,6 @@
 -- |
 -- Module    : Data.Ini.Types
--- Copyright : 2011 Magnus Therning
+-- Copyright : 2011-2014 Magnus Therning
 -- License   : BSD3
 module Data.Ini.Types where
 
