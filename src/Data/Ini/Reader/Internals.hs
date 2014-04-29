@@ -11,7 +11,6 @@ import Control.Monad.State
 -- import Text.ParserCombinators.Parsec as P
 import Text.Parsec as P
 import Text.Parsec.String
-import qualified Data.ByteString as BS
 
 import Data.Ini
 import Data.Ini.Types
@@ -71,7 +70,7 @@ eatWhiteSpace = many $ oneOf " \t"
 -- surrounded by any number of white space characters (see 'eatWhiteSpace').
 secParser :: Parser IniFile
 secParser = let
-        validSecNameChrs = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "_-/@"
+        validSecNameChrs = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "._-/@\" "
     in do
         char '['
         eatWhiteSpace

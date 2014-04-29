@@ -47,11 +47,6 @@ case_secParserAllowedChars5 = let
         actual = p2E secParser "sec" "[_foo]\n"
     in expected @=? actual
 
-case_secParserDisallowedChars1 = let
-        expected = Left "bad"
-        actual = p2E secParser "sec" "[foo.bar]\n"
-    in expected @=? actual
-
 case_secParserDropSpace = let
         expected = Right $ SectionL "foo"
         actual = p2E secParser "sec" "[ \tfoo\t ]\n"
@@ -60,6 +55,16 @@ case_secParserDropSpace = let
 case_secParserDropTrailing = let
         expected = Right $ SectionL "foo"
         actual = p2E secParser "sec" "[foo]  \t foobar\n"
+    in expected @=? actual
+
+case_secParserAllowGit1 = let
+        expected = Right $ SectionL "branch \"master\""
+        actual = p2E secParser "sec" "[branch \"master\"]\n"
+    in expected @=? actual
+
+case_secParserAllowGit2 = let
+        expected = Right $ SectionL "foo \"bar.baz\""
+        actual = p2E secParser "sec" "[foo \"bar.baz\"]\n"
     in expected @=? actual
 
 -- {{{1 optLineParser
