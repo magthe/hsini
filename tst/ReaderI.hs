@@ -5,7 +5,6 @@ module ReaderI
     (allTests
     ) where
 
-import Test.HUnit.Base
 import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.TH
