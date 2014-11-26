@@ -146,7 +146,11 @@ case_noiseParserNonEmpty = let
     in expected @=? actual
 
 -- {{{1 iniParser
--- TBD
+case_iniParserEmpty :: Assertion
+case_iniParserEmpty = expected @=? actual
+    where
+        expected = Right []
+        actual = p2E iniParser "parsing empty file" ""
 
 -- {{{1 buildConfig
 -- TBD
