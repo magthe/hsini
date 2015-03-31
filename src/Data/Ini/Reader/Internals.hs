@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 -- |
 -- Module    : Data.Ini.Reader.Internals
 -- Copyright : 2011-2014 Magnus Therning
