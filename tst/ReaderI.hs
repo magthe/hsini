@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# OPTIONS_GHC -XTemplateHaskell #-}
 -- Copyright : 2011-2014 Magnus Therning
 -- License   : BSD3
