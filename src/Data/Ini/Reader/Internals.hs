@@ -7,7 +7,7 @@
 -- Internal functions used in 'Data.Ini.Reader'.
 module Data.Ini.Reader.Internals where
 
-import Control.Monad.Error
+import Control.Monad.Except
 import Control.Monad.State
 import qualified Data.ByteString as BS
 import Text.Parsec as P
@@ -21,10 +21,6 @@ data IniReaderError
     | IniSyntaxError String
     | IniOtherError String
     deriving (Eq, Show)
-
-instance Error IniReaderError where
-    noMsg = IniOtherError "Unknown error"
-    strMsg s = IniOtherError s
 
 type IniParseResult = Either IniReaderError
 

@@ -10,7 +10,7 @@ module Data.Ini.Reader
     , IniParseResult
     ) where
 
-import Control.Monad.Error
+import Control.Monad.Except
 import qualified Text.ParserCombinators.Parsec as P
 
 import Data.Ini.Types
