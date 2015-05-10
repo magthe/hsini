@@ -54,19 +54,19 @@ options sn cfg = maybe [] M.keys (getSection sn cfg)
 
 -- | Sets the value of the option, adding it if it doesn't exist.
 setOption :: SectionName -> OptionName -> OptionValue -> Config -> Config
-setOption sn on ov cfg = let
+setOption sn on ov cfg = maybe (M.insert sn new_s cfg) (\ sec -> M.insert sn (M.insert on ov sec) cfg) s
+    where
         s = getSection sn cfg
         new_s = M.insert on ov M.empty
-    in maybe (M.insert sn new_s cfg) (\ sec -> M.insert sn (M.insert on ov sec) cfg) s
 
 -- | Removes the option if it exists.  Empty sections are pruned.
 delOption :: SectionName -> OptionName -> Config -> Config
-delOption sn on cfg = let
-        s = getSection sn cfg
-        sEmptyAfterDelete = maybe True (\ sec -> M.empty == M.delete on sec) s
-    in if sEmptyAfterDelete
+delOption sn on cfg = if sEmptyAfterDelete
         then M.delete sn cfg
         else maybe cfg (\ sec -> M.insert sn (M.delete on sec) cfg) s
+    where
+        s = getSection sn cfg
+        sEmptyAfterDelete = maybe True (\ sec -> M.empty == M.delete on sec) s
 
 -- | Returns all options and their values of a section.
 allItems :: SectionName -> Config -> [(OptionName, OptionValue)]
