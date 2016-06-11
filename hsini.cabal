@@ -32,7 +32,10 @@ test-suite hsini-tests
     type: exitcode-stdio-1.0
     hs-source-dirs: tst, src
     main-is: Main.hs
-    other-modules: Ini,
+    other-modules: Data.Ini
+                   Data.Ini.Reader.Internals
+                   Data.Ini.Types
+                   Ini
                    ReaderI
     default-language: Haskell2010
     build-depends: base,
