@@ -18,26 +18,31 @@ source-repository head
 library
     hs-source-dirs: src
     default-language: Haskell2010
-    build-depends: base ==4.8.*, bytestring ==0.10.*,
-        containers ==0.5.*, mtl ==2.2.*, parsec ==3.1.*
-    exposed-modules: Data.Ini Data.Ini.Types Data.Ini.Reader
+    build-depends: base ==4.9.*,
+                   bytestring ==0.10.*,
+                   containers ==0.5.*,
+                   mtl ==2.2.*,
+                   parsec ==3.1.*
+    exposed-modules: Data.Ini
+                     Data.Ini.Types
+                     Data.Ini.Reader
     other-modules: Data.Ini.Reader.Internals
 
 test-suite hsini-tests
     type: exitcode-stdio-1.0
     hs-source-dirs: tst, src
     main-is: Main.hs
-    other-modules: Ini, ReaderI
+    other-modules: Ini,
+                   ReaderI
     default-language: Haskell2010
-    build-depends:
-        base,
-        containers,
-        bytestring,
-        parsec,
-        mtl,
-        HUnit,
-        tasty,
-        tasty-hunit,
-        tasty-quickcheck,
-        tasty-th,
-        QuickCheck
+    build-depends: base,
+                   containers,
+                   bytestring,
+                   parsec,
+                   mtl,
+                   HUnit,
+                   tasty,
+                   tasty-hunit,
+                   tasty-quickcheck,
+                   tasty-th,
+                   QuickCheck
