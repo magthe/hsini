@@ -1,0 +1,43 @@
+name: hsini
+version: 0.4.99
+synopsis: ini configuration files
+description: >-
+  Library for reading and writing configuration files in INI format (see
+  <https://en.wikipedia.org/wiki/INI_file>).
+maintainer: Magnus Therning <magnus@therning.org>
+license: BSD3
+category: Configuration, Data
+extra-source-files:
+  - package.yaml
+  - stack.yaml
+
+git: https://github.com/magthe/hsini.git
+
+library:
+  source-dirs:
+    - src
+  dependencies:
+    - base <5
+    - bytestring
+    - containers
+    - mtl
+    - parsec
+  other-modules:
+    - Data.Ini.Reader.Internals
+
+tests:
+  hsini-tests:
+    source-dirs:
+      - tst
+      - src
+    main: Main.hs
+    dependencies:
+      - base
+      - bytestring
+      - containers
+      - mtl
+      - parsec
+      - tasty
+      - tasty-hunit
+      - tasty-quickcheck
+      - tasty-th
