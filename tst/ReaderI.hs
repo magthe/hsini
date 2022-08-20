@@ -115,7 +115,7 @@ case_optContParserSpace = let
     in expected @=? actual
 
 case_optContParserTab = let
-        expected = Right $OptionContL "foo"
+        expected = Right $ OptionContL "foo"
         actual = p2E optContParser "optCont" "\tfoo\n"
     in expected @=? actual
 
