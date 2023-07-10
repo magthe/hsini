@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# OPTIONS_GHC -XTemplateHaskell #-}
+{-# LANGUAGE TemplateHaskell #-}
 -- Copyright : 2011-2014 Magnus Therning
 -- License   : BSD3
 module ReaderI
@@ -115,7 +115,7 @@ case_optContParserSpace = let
     in expected @=? actual
 
 case_optContParserTab = let
-        expected = Right $OptionContL "foo"
+        expected = Right $ OptionContL "foo"
         actual = p2E optContParser "optCont" "\tfoo\n"
     in expected @=? actual
 
