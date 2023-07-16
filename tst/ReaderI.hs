@@ -134,7 +134,7 @@ case_optLineParserDisallowedChars1 =
 case_optLineParserDropSpace =
     let
         expected = Right $ OptionL "foo" "bar"
-        actual = p2E optLineParser "optLine" "foo\t \t=\t \t bar\n"
+        actual = p2E optLineParser "optLine" " \tfoo\t \t=\t \t bar\n"
      in
         expected @=? actual
 

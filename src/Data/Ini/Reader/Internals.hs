@@ -105,6 +105,7 @@ optLineParser =
         validOptNameChrs = ['a' .. 'z'] ++ ['A' .. 'Z'] ++ ['0' .. '9'] ++ "_-/@"
      in
         do
+            eatWhiteSpace
             on <- many1 $ oneOf validOptNameChrs
             eatWhiteSpace
             char '='
