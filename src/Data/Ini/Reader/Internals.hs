@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE ImportQualifiedPost #-}
 
 {- |
 Module    : Data.Ini.Reader.Internals
@@ -9,11 +10,21 @@ Internal functions used in 'Data.Ini.Reader'.
 -}
 module Data.Ini.Reader.Internals where
 
-import Control.Monad.Except
-import Control.Monad.State
-import qualified Data.ByteString as BS
-import Text.Parsec as P
-import Text.Parsec.String
+import Control.Monad.Except (MonadError (throwError), liftM)
+import Control.Monad.State (evalState, get, put)
+import Data.ByteString qualified as BS
+import Text.Parsec as P (
+    anyChar,
+    char,
+    choice,
+    many,
+    many1,
+    manyTill,
+    newline,
+    noneOf,
+    oneOf,
+ )
+import Text.Parsec.String (Parser)
 
 import Data.Ini
 import Data.Ini.Types
@@ -45,10 +56,10 @@ buildConfig ifs =
 
         -- merge together OptionL and subsequent OptionContL items
         mergeOptions [] = return []
-        mergeOptions (s@(SectionL _) : ifs) = (s :) `liftM` mergeOptions ifs
-        mergeOptions (CommentL : ifs) = (CommentL :) `liftM` mergeOptions ifs
-        mergeOptions (OptionL on ov : OptionContL ov2 : ifs) = mergeOptions $ (OptionL on (ov ++ ov2)) : ifs
-        mergeOptions (o@(OptionL on ov) : ifs) = (o :) `liftM` mergeOptions ifs
+        mergeOptions (s@(SectionL _) : ifs) = (s :) `fmap` mergeOptions ifs
+        mergeOptions (CommentL : ifs) = (CommentL :) `fmap` mergeOptions ifs
+        mergeOptions (OptionL on ov : OptionContL ov2 : ifs) = mergeOptions $ OptionL on (ov ++ ov2) : ifs
+        mergeOptions (o@(OptionL on ov) : ifs) = (o :) `fmap` mergeOptions ifs
         mergeOptions _ = throwError $ IniSyntaxError "Syntax error in INI file."
 
         -- build the configuration from a [IniFile]
@@ -59,7 +70,7 @@ buildConfig ifs =
             let na = setOption sn on ov a
             buildit na is
      in
-        mergeOptions fIfs >>= (\is -> return . fst $ runState (buildit emptyConfig is) "default")
+        mergeOptions fIfs >>= \is -> return $ evalState (buildit emptyConfig is) "default"
 
 -- | Consumer of whitespace \"@ \t@\".
 eatWhiteSpace :: Parser String
