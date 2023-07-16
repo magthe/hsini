@@ -124,6 +124,13 @@ case_optLineParserAllowedChars5 =
      in
         expected @=? actual
 
+case_optLineParserAllowedChars6 =
+    let
+        expected = Right $ OptionL "foo bar" "baz"
+        actual = p2E optLineParser "optLine" "foo bar=baz\n"
+     in
+        expected @=? actual
+
 case_optLineParserDisallowedChars1 =
     let
         expected = Left "bad"

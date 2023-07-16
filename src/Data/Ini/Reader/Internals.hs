@@ -102,7 +102,7 @@ space characters (see 'eatWhiteSpace').
 optLineParser :: Parser IniFile
 optLineParser =
     let
-        validOptNameChrs = ['a' .. 'z'] ++ ['A' .. 'Z'] ++ ['0' .. '9'] ++ "_-/@"
+        validOptNameChrs = ['a' .. 'z'] ++ ['A' .. 'Z'] ++ ['0' .. '9'] ++ "_-/@ "
      in
         do
             eatWhiteSpace
