@@ -1,3 +1,5 @@
+{-# LANGUAGE ImportQualifiedPost #-}
+
 {- |
 Module    : Data.Ini.Reader
 Copyright : 2011-2014 Magnus Therning
@@ -11,18 +13,14 @@ module Data.Ini.Reader (
     IniParseResult,
 ) where
 
-import Control.Monad.Except
-import qualified Text.ParserCombinators.Parsec as P
+import Control.Monad.Except (throwError)
+import Text.ParserCombinators.Parsec qualified as P
 
-import Data.Ini.Reader.Internals
-import Data.Ini.Types
+import Data.Ini.Reader.Internals (IniParseResult, IniReaderError (..), buildConfig, iniParser)
+import Data.Ini.Types (Config)
 
 -- | Parser for a configuration contained in a 'String'.
 parse :: String -> IniParseResult Config
-parse s =
-    let
-        pr = P.parse iniParser "ini" s
-     in
-        case pr of
-            Left e -> throwError . IniParserError $ show e
-            Right is -> buildConfig is
+parse s = case P.parse iniParser "ini" s of
+    Left e -> throwError . IniParserError $ show e
+    Right is -> buildConfig is

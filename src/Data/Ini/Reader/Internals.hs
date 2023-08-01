@@ -9,11 +9,12 @@ Internal functions used in 'Data.Ini.Reader'.
 -}
 module Data.Ini.Reader.Internals where
 
-import Control.Monad (void)
 import Control.Monad.Except (MonadError (throwError))
 import Control.Monad.State (evalState, get, put)
+import Data.Functor (($>))
 import Text.Parsec as P (
     anyChar,
+    between,
     char,
     choice,
     many,
@@ -25,8 +26,8 @@ import Text.Parsec as P (
  )
 import Text.Parsec.String (Parser)
 
-import Data.Ini
-import Data.Ini.Types
+import Data.Ini (emptyConfig, setOption)
+import Data.Ini.Types (Config)
 
 data IniReaderError
     = IniParserError String
@@ -81,18 +82,12 @@ eatWhiteSpace = many $ oneOf " \t"
 surrounded by any number of white space characters (see 'eatWhiteSpace').
 -}
 secParser :: Parser IniFile
-secParser =
-    let
-        validSecNameChrs = ['a' .. 'z'] ++ ['A' .. 'Z'] ++ ['0' .. '9'] ++ "._-/@\" "
-     in
-        do
-            void $ char '['
-            void eatWhiteSpace
-            sn <- many1 $ oneOf validSecNameChrs
-            void eatWhiteSpace
-            void $ char ']'
-            void $ manyTill anyChar newline
-            return $ SectionL sn
+secParser = SectionL <$> between sectionNameOpen sectionNameClose sectionName
+  where
+    sectionNameOpen = char '[' *> eatWhiteSpace
+    sectionNameClose = eatWhiteSpace *> char ']' *> manyTill anyChar newline
+    sectionName = many1 $ oneOf validSecNameChrs
+    validSecNameChrs = ['a' .. 'z'] ++ ['A' .. 'Z'] ++ ['0' .. '9'] ++ "._-/@\" "
 
 {- | Parser for a single line of an option.  The line must start with an option
 name, then a @=@ must be found, and finally the rest of the line is taken as
@@ -100,18 +95,12 @@ the option value.  The equal sign may be surrounded by any number of white
 space characters (see 'eatWhiteSpace').
 -}
 optLineParser :: Parser IniFile
-optLineParser =
-    let
-        validOptNameChrs = ['a' .. 'z'] ++ ['A' .. 'Z'] ++ ['0' .. '9'] ++ "_-/@ "
-     in
-        do
-            void eatWhiteSpace
-            on <- many1 $ oneOf validOptNameChrs
-            void eatWhiteSpace
-            void $ char '='
-            void eatWhiteSpace
-            ov <- manyTill anyChar newline
-            return $ OptionL on ov
+optLineParser = OptionL <$> optionName <*> (optionEqual *> optionValue)
+  where
+    optionName = eatWhiteSpace *> many1 (oneOf validOptNameChrs)
+    optionEqual = eatWhiteSpace *> char '=' *> eatWhiteSpace
+    optionValue = manyTill anyChar newline
+    validOptNameChrs = ['a' .. 'z'] ++ ['A' .. 'Z'] ++ ['0' .. '9'] ++ "_-/@ "
 
 {- | Parser for an option-value continuation line.  The line must start with
 either a space or a tab character (\"@ \t@\").  Everything else on the line,
@@ -119,12 +108,9 @@ until the newline character, is taken as the continuation of an option
 value.
 -}
 optContParser :: Parser IniFile
-optContParser = do
-    void $ oneOf " \t"
-    void eatWhiteSpace
-    oc <- noneOf " \t"
-    ov <- manyTill anyChar newline
-    return $ OptionContL $ oc : ov
+optContParser = OptionContL <$> value
+  where
+    value = (:) <$> (oneOf " \t" *> eatWhiteSpace *> noneOf " \t") <*> manyTill anyChar newline
 
 {- | Parser for "noise" in the configuration file, such as comments and empty
 lines.  (Note that lines containing only space characters will be
@@ -133,12 +119,10 @@ successfully parsed by 'optContParser'.)
 noiseParser :: Parser IniFile
 noiseParser =
     let
-        commentP = do
-            void $ oneOf "#;"
-            manyTill anyChar newline
-        emptyL = newline >> return ""
+        commentP = oneOf "#;" *> manyTill anyChar newline
+        emptyL = (newline $> "")
      in
-        choice [commentP, emptyL] >> return CommentL
+        choice [commentP, emptyL] $> CommentL
 
 iniParser :: Parser [IniFile]
 iniParser =

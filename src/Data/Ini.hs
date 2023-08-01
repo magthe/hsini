@@ -1,3 +1,5 @@
+{-# LANGUAGE ImportQualifiedPost #-}
+
 {- |
 Module    : Data.Ini
 Copyright : 2011-2014 Magnus Therning
@@ -13,10 +15,10 @@ configurations.
 module Data.Ini where
 
 -- {{{1 imports
-import qualified Data.Map as M
-import Data.Maybe
+import Data.Map qualified as M
+import Data.Maybe (isJust)
 
-import Data.Ini.Types
+import Data.Ini.Types (Config, OptionName, OptionValue, Section, SectionName)
 
 -- {{{1 configurations
 
