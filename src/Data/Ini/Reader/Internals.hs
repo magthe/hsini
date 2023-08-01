@@ -1,5 +1,4 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE ImportQualifiedPost #-}
 
 {- |
 Module    : Data.Ini.Reader.Internals
@@ -10,9 +9,9 @@ Internal functions used in 'Data.Ini.Reader'.
 -}
 module Data.Ini.Reader.Internals where
 
-import Control.Monad.Except (MonadError (throwError), liftM)
+import Control.Monad (void)
+import Control.Monad.Except (MonadError (throwError))
 import Control.Monad.State (evalState, get, put)
-import Data.ByteString qualified as BS
 import Text.Parsec as P (
     anyChar,
     char,
@@ -56,10 +55,10 @@ buildConfig ifs =
 
         -- merge together OptionL and subsequent OptionContL items
         mergeOptions [] = return []
-        mergeOptions (s@(SectionL _) : ifs) = (s :) `fmap` mergeOptions ifs
-        mergeOptions (CommentL : ifs) = (CommentL :) `fmap` mergeOptions ifs
-        mergeOptions (OptionL on ov : OptionContL ov2 : ifs) = mergeOptions $ OptionL on (ov ++ ov2) : ifs
-        mergeOptions (o@(OptionL on ov) : ifs) = (o :) `fmap` mergeOptions ifs
+        mergeOptions (s@(SectionL _) : ifs') = (s :) `fmap` mergeOptions ifs'
+        mergeOptions (CommentL : ifs') = (CommentL :) `fmap` mergeOptions ifs'
+        mergeOptions (OptionL on ov : OptionContL ov2 : ifs') = mergeOptions $ OptionL on (ov ++ ov2) : ifs'
+        mergeOptions (o@(OptionL _ _) : ifs') = (o :) `fmap` mergeOptions ifs'
         mergeOptions _ = throwError $ IniSyntaxError "Syntax error in INI file."
 
         -- build the configuration from a [IniFile]
@@ -69,6 +68,7 @@ buildConfig ifs =
             sn <- get
             let na = setOption sn on ov a
             buildit na is
+        buildit _ _ = undefined
      in
         mergeOptions fIfs >>= \is -> return $ evalState (buildit emptyConfig is) "default"
 
@@ -86,12 +86,12 @@ secParser =
         validSecNameChrs = ['a' .. 'z'] ++ ['A' .. 'Z'] ++ ['0' .. '9'] ++ "._-/@\" "
      in
         do
-            char '['
-            eatWhiteSpace
+            void $ char '['
+            void eatWhiteSpace
             sn <- many1 $ oneOf validSecNameChrs
-            eatWhiteSpace
-            char ']'
-            manyTill anyChar newline
+            void eatWhiteSpace
+            void $ char ']'
+            void $ manyTill anyChar newline
             return $ SectionL sn
 
 {- | Parser for a single line of an option.  The line must start with an option
@@ -105,11 +105,11 @@ optLineParser =
         validOptNameChrs = ['a' .. 'z'] ++ ['A' .. 'Z'] ++ ['0' .. '9'] ++ "_-/@ "
      in
         do
-            eatWhiteSpace
+            void eatWhiteSpace
             on <- many1 $ oneOf validOptNameChrs
-            eatWhiteSpace
-            char '='
-            eatWhiteSpace
+            void eatWhiteSpace
+            void $ char '='
+            void eatWhiteSpace
             ov <- manyTill anyChar newline
             return $ OptionL on ov
 
@@ -120,8 +120,8 @@ value.
 -}
 optContParser :: Parser IniFile
 optContParser = do
-    oneOf " \t"
-    eatWhiteSpace
+    void $ oneOf " \t"
+    void eatWhiteSpace
     oc <- noneOf " \t"
     ov <- manyTill anyChar newline
     return $ OptionContL $ oc : ov
@@ -134,7 +134,7 @@ noiseParser :: Parser IniFile
 noiseParser =
     let
         commentP = do
-            oneOf "#;"
+            void $ oneOf "#;"
             manyTill anyChar newline
         emptyL = newline >> return ""
      in

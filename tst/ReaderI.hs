@@ -7,15 +7,23 @@ module ReaderI (
     allTests,
 ) where
 
-import Test.Tasty
-import Test.Tasty.HUnit
-import Test.Tasty.TH
-import Text.ParserCombinators.Parsec as P
+import Test.Tasty (TestTree)
+import Test.Tasty.HUnit (Assertion, testCase, (@=?))
+import Test.Tasty.TH (testGroupGenerator)
+import Text.ParserCombinators.Parsec as P (parse, Parser)
 
-import Data.Ini.Reader.Internals
+import Data.Ini.Reader.Internals (
+    IniFile (CommentL, OptionContL, OptionL, SectionL),
+    iniParser,
+    noiseParser,
+    optContParser,
+    optLineParser,
+    secParser,
+ )
 
 -- Convenience function that translates a parser result to something that's
 -- easier to check.
+p2E :: Parser a  -> String -> String -> Either String a
 p2E p s t =
     let
         res = P.parse p s t
@@ -25,6 +33,7 @@ p2E p s t =
             Right e -> Right e
 
 -- {{{1 secParser
+case_secParserAllowedChars1 :: Assertion
 case_secParserAllowedChars1 =
     let
         expected = Right $ SectionL "foo"
@@ -32,6 +41,7 @@ case_secParserAllowedChars1 =
      in
         expected @=? actual
 
+case_secParserAllowedChars2 :: Assertion
 case_secParserAllowedChars2 =
     let
         expected = Right $ SectionL "FooBar"
@@ -39,6 +49,7 @@ case_secParserAllowedChars2 =
      in
         expected @=? actual
 
+case_secParserAllowedChars3 :: Assertion
 case_secParserAllowedChars3 =
     let
         expected = Right $ SectionL "@Foo/Bar-"
@@ -46,6 +57,7 @@ case_secParserAllowedChars3 =
      in
         expected @=? actual
 
+case_secParserAllowedChars4 :: Assertion
 case_secParserAllowedChars4 =
     let
         expected = Right $ SectionL "foo123"
@@ -53,6 +65,7 @@ case_secParserAllowedChars4 =
      in
         expected @=? actual
 
+case_secParserAllowedChars5 :: Assertion
 case_secParserAllowedChars5 =
     let
         expected = Right $ SectionL "_foo"
@@ -60,6 +73,7 @@ case_secParserAllowedChars5 =
      in
         expected @=? actual
 
+case_secParserDropSpace :: Assertion
 case_secParserDropSpace =
     let
         expected = Right $ SectionL "foo"
@@ -67,6 +81,7 @@ case_secParserDropSpace =
      in
         expected @=? actual
 
+case_secParserDropTrailing :: Assertion
 case_secParserDropTrailing =
     let
         expected = Right $ SectionL "foo"
@@ -74,6 +89,7 @@ case_secParserDropTrailing =
      in
         expected @=? actual
 
+case_secParserAllowGit1 :: Assertion
 case_secParserAllowGit1 =
     let
         expected = Right $ SectionL "branch \"master\""
@@ -81,6 +97,7 @@ case_secParserAllowGit1 =
      in
         expected @=? actual
 
+case_secParserAllowGit2 :: Assertion
 case_secParserAllowGit2 =
     let
         expected = Right $ SectionL "foo \"bar.baz\""
@@ -89,6 +106,7 @@ case_secParserAllowGit2 =
         expected @=? actual
 
 -- {{{1 optLineParser
+case_optLineParserAllowedChars1 :: Assertion
 case_optLineParserAllowedChars1 =
     let
         expected = Right $ OptionL "foo" "bar"
@@ -96,6 +114,7 @@ case_optLineParserAllowedChars1 =
      in
         expected @=? actual
 
+case_optLineParserAllowedChars2 :: Assertion
 case_optLineParserAllowedChars2 =
     let
         expected = Right $ OptionL "Foo" "bAr"
@@ -103,6 +122,7 @@ case_optLineParserAllowedChars2 =
      in
         expected @=? actual
 
+case_optLineParserAllowedChars3 :: Assertion
 case_optLineParserAllowedChars3 =
     let
         expected = Right $ OptionL "foo@/foo-" "bar"
@@ -110,6 +130,7 @@ case_optLineParserAllowedChars3 =
      in
         expected @=? actual
 
+case_optLineParserAllowedChars4 :: Assertion
 case_optLineParserAllowedChars4 =
     let
         expected = Right $ OptionL "foo123" "bar"
@@ -117,6 +138,7 @@ case_optLineParserAllowedChars4 =
      in
         expected @=? actual
 
+case_optLineParserAllowedChars5 :: Assertion
 case_optLineParserAllowedChars5 =
     let
         expected = Right $ OptionL "_foo" "bar"
@@ -124,6 +146,7 @@ case_optLineParserAllowedChars5 =
      in
         expected @=? actual
 
+case_optLineParserAllowedChars6 :: Assertion
 case_optLineParserAllowedChars6 =
     let
         expected = Right $ OptionL "foo bar" "baz"
@@ -131,6 +154,7 @@ case_optLineParserAllowedChars6 =
      in
         expected @=? actual
 
+case_optLineParserDisallowedChars1 :: Assertion
 case_optLineParserDisallowedChars1 =
     let
         expected = Left "bad"
@@ -138,6 +162,7 @@ case_optLineParserDisallowedChars1 =
      in
         expected @=? actual
 
+case_optLineParserDropSpace :: Assertion
 case_optLineParserDropSpace =
     let
         expected = Right $ OptionL "foo" "bar"
@@ -145,6 +170,7 @@ case_optLineParserDropSpace =
      in
         expected @=? actual
 
+case_optLineParserKeepSpace :: Assertion
 case_optLineParserKeepSpace =
     let
         expected = Right $ OptionL "foo" "bar \t \t"
@@ -153,6 +179,7 @@ case_optLineParserKeepSpace =
         expected @=? actual
 
 -- {{{1 optContParser
+case_optContParserSpace :: Assertion
 case_optContParserSpace =
     let
         expected = Right $ OptionContL "foo"
@@ -160,6 +187,7 @@ case_optContParserSpace =
      in
         expected @=? actual
 
+case_optContParserTab :: Assertion
 case_optContParserTab =
     let
         expected = Right $ OptionContL "foo"
@@ -167,6 +195,7 @@ case_optContParserTab =
      in
         expected @=? actual
 
+case_optContParserKeepTrailing :: Assertion
 case_optContParserKeepTrailing =
     let
         expected = Right $ OptionContL "foo  \t\t"
@@ -175,6 +204,7 @@ case_optContParserKeepTrailing =
         expected @=? actual
 
 -- {{{1 noiseParser
+case_noiseParserEmptyLine :: Assertion
 case_noiseParserEmptyLine =
     let
         expected = Right CommentL
@@ -182,6 +212,7 @@ case_noiseParserEmptyLine =
      in
         expected @=? actual
 
+case_noiseParserComment1 :: Assertion
 case_noiseParserComment1 =
     let
         expected = Right CommentL
@@ -189,6 +220,7 @@ case_noiseParserComment1 =
      in
         expected @=? actual
 
+case_noiseParserComment2 :: Assertion
 case_noiseParserComment2 =
     let
         expected = Right CommentL
@@ -196,6 +228,7 @@ case_noiseParserComment2 =
      in
         expected @=? actual
 
+case_noiseParserNonEmpty :: Assertion
 case_noiseParserNonEmpty =
     let
         expected = Left "bad"
