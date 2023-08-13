@@ -10,17 +10,14 @@ module Data.Ini.Types where
 import Control.Arrow (second)
 import Data.Map qualified as M
 
-type Config = M.Map SectionName Section
+type ConfigT a = M.Map a (SectionT a)
+type SectionT a = M.Map a a
 
-type SectionName = String
-type Section = M.Map OptionName OptionValue
-
-type OptionName = String
-type OptionValue = String
+type Config = ConfigT String
 
 -- useful since Map doesn't have any Serial instance
-cfgFromList :: [(SectionName, [(OptionName, OptionValue)])] -> Config
+cfgFromList :: Ord a => [(a, [(a, a)])] -> ConfigT a
 cfgFromList = M.fromList . map (second M.fromList)
 
-cfgToList :: Config -> [(SectionName, [(OptionName, OptionValue)])]
+cfgToList :: ConfigT a -> [(a, [(a, a)])]
 cfgToList = M.toList . M.map M.toList
