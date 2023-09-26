@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          hsini
-version:       0.5.2.1
+version:       0.5.2.2
 synopsis:      ini configuration files
 description:
   Library for reading and writing configuration files in INI format (see <https://en.wikipedia.org/wiki/INI_file>).
