@@ -162,8 +162,16 @@ case_optLineParserDisallowedChars1 =
      in
         expected @=? actual
 
-case_optLineParserDropSpace :: Assertion
-case_optLineParserDropSpace =
+case_optLineParserDropSpace1 :: Assertion
+case_optLineParserDropSpace1 =
+    let
+        expected = Right $ OptionL "foo" "bar"
+        actual = p2E optLineParser "optLine" " foo =  bar\n"
+     in
+        expected @=? actual
+
+case_optLineParserDropSpace2 :: Assertion
+case_optLineParserDropSpace2 =
     let
         expected = Right $ OptionL "foo" "bar"
         actual = p2E optLineParser "optLine" " \tfoo\t \t=\t \t bar\n"

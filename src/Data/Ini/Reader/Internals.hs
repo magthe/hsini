@@ -26,8 +26,10 @@ import Text.Parsec as P (
  )
 import Text.Parsec.String (Parser)
 
+import Data.Char (isSpace)
 import Data.Ini (emptyConfig, setOption)
 import Data.Ini.Types (Config)
+import Data.List (dropWhileEnd)
 
 data IniReaderError
     = IniParserError String
@@ -97,7 +99,7 @@ space characters (see 'eatWhiteSpace').
 optLineParser :: Parser IniFile
 optLineParser = OptionL <$> optionName <*> (optionEqual *> optionValue)
   where
-    optionName = eatWhiteSpace *> many1 (oneOf validOptNameChrs)
+    optionName = dropWhileEnd isSpace <$> (eatWhiteSpace *> many1 (oneOf validOptNameChrs))
     optionEqual = eatWhiteSpace *> char '=' *> eatWhiteSpace
     optionValue = manyTill anyChar newline
     validOptNameChrs = ['a' .. 'z'] ++ ['A' .. 'Z'] ++ ['0' .. '9'] ++ "_-/@ "
