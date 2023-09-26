@@ -10,7 +10,7 @@ module ReaderI (
 import Test.Tasty (TestTree)
 import Test.Tasty.HUnit (Assertion, testCase, (@=?))
 import Test.Tasty.TH (testGroupGenerator)
-import Text.ParserCombinators.Parsec as P (parse, Parser)
+import Text.ParserCombinators.Parsec as P (Parser, parse)
 
 import Data.Ini.Reader.Internals (
     IniFile (CommentL, OptionContL, OptionL, SectionL),
@@ -23,7 +23,7 @@ import Data.Ini.Reader.Internals (
 
 -- Convenience function that translates a parser result to something that's
 -- easier to check.
-p2E :: Parser a  -> String -> String -> Either String a
+p2E :: Parser a -> String -> String -> Either String a
 p2E p s t =
     let
         res = P.parse p s t
